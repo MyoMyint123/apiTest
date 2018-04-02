@@ -21,17 +21,38 @@ $product = new Product($db);
 $data = json_decode(file_get_contents("php://input"));
  
 // set product property values
-$product->name = "MyoMyo Myo";
-// $product->price = $data->price;
-// $product->description = $data->description;
+$product->name = "data->name";
+$product->price = "data->price";
+$product->description = "data->description";
 // $product->category_id = $data->category_id;
-// $product->created = date('Y-m-d H:i:s');
- 
+$product->created = date('Y-m-d H:i:s');
+
 // create the product
-if($product->create()){
-    echo '{';
-        echo '"message": "Product was created."';
-    echo '}';
+
+$id = $product->create();
+
+$product1 = new Product($db);
+
+$product1->id = $id;
+ 
+// read the details of product to be edited
+$product1->readOne();
+ 
+// create array
+$product_arr = array(
+    // "id" =>  $product->id,
+    "name" => $product1->name,
+    "description" => $product1->description,
+    "price" => $product1->price,
+ 
+);
+
+if($id){
+ print_r(json_encode($product_arr));
+
+    // echo '{';
+    //     echo '"message": "Product was created."';
+    // echo '}';
 }
  
 // if unable to create the product, tell the user
